@@ -13,7 +13,7 @@
     "access": "public"
   },
   "scripts": {
-    "prepublishOnly": "npm build",
+    "prepublishOnly": "npm run build",
     "build": "tsc --build",
     "hook-cli": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\""
