@@ -3,7 +3,7 @@ import yargs from 'yargs';
 yargs(process.argv.slice(2))
     .scriptName('hook-cli')
     .alias('v', 'version')
-    .commandDir('modules', { extensions: ['ts'] })
+    .commandDir('modules', { extensions: ['ts', 'js'] })
     .demandCommand()
     .alias('h', 'help')
     .help('help')
