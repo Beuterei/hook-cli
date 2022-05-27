@@ -40,20 +40,10 @@ npm i -D @beuluis/hook-cli
 
 ### Usage
 
-1. Add script to `package.json`
-
-    ```json
-    {
-        "scripts": {
-            "hook-cli": "hook-cli"
-        }
-    }
-    ```
-
-2. start using the hooks in `.husky`
+Run commands. For example using the hooks in `.husky`
 
     ```bash
-    npm run hook-cli -- [command] [...]
+    npx hook-cli [command] [...]
     ```
 
 ### Commands
@@ -72,34 +62,40 @@ Runs a package audit and collects the results
 ##### Example usage
 
 ```bash
-npm run hook-cli -- checkForVulnerabilities
+npx hook-cli checkForVulnerabilities
 ```
 
 ```bash
-npm run hook-cli -- checkForVulnerabilities --package-manager yarn
+npx hook-cli checkForVulnerabilities --package-manager yarn
 ```
 
 ```bash
-npm run hook-cli -- checkForVulnerabilities --audit-level low
+npx hook-cli checkForVulnerabilities --audit-level low
 ```
 
 ```bash
-npm run hook-cli -- checkForVulnerabilities --no-fail
+npx hook-cli checkForVulnerabilities --no-fail
 ```
 
 ```bash
-npm run hook-cli -- checkForVulnerabilities --prod
+npx hook-clicheckForVulnerabilities --prod
 ```
 
 ```bash
-npm run hook-cli -- checkForVulnerabilities -l high -m yarn -n -p
+npx hook-cli checkForVulnerabilities -l high -m yarn -n -p
 ```
 
 <!-- USEFUL -->
 
 ## Useful
 
-Print help page for command
+- Print help page for command
+
+```bash
+npx hook-cli [command] --help
+```
+
+- Test command during development
 
 ```bash
 npm run hook-cli -- [command] --help
