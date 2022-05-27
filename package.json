@@ -1,0 +1,46 @@
+{
+  "name": "@beuluis/hook-cli",
+  "version": "1.0.0",
+  "description": "A small hook cli that can be used with for example husky",
+  "bin": {
+    "hook-cli": "./dist/index.js"
+  },
+  "main": "dist",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc --build",
+    "hook-cli": "ts-node src/index.ts",
+    "test": "echo \"Error: no test specified\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/beuluis/hook-cli.git"
+  },
+  "author": "Luis Beu <me@luisbeu.de> (https://luisbeu.de/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/beuluis/hook-cli/issues"
+  },
+  "homepage": "https://github.com/beuluis/hook-cli#readme",
+  "dependencies": {
+    "console-log-colors": "^0.2.3",
+    "listr": "^0.14.3",
+    "nodemon": "^1.19.4",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "@beuluis/prettier-config": "^1.0.2",
+    "@types/listr": "^0.14.4",
+    "@types/node": "^17.0.35",
+    "@types/yargs": "^17.0.10",
+    "ts-node": "^10.8.0",
+    "tslib": "^2.4.0",
+    "typescript": "^4.7.2"
+  },
+  "prettier": "@beuluis/prettier-config"
+}
