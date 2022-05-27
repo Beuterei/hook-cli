@@ -89,7 +89,8 @@ const auditCommandBuilder = (packageManager: string, prod: boolean) => {
     return command;
 };
 
-const totalVulnerabilities = (obj: AuditResult) => Object.values(obj).reduce((a, b) => a + b);
+const totalVulnerabilities = (obj: AuditResult) =>
+    obj.info + obj.low + obj.moderate + obj.high + obj.critical; // be specific because the obj could have other stuff in it
 
 export = registerCommandModule({
     command: 'checkForVulnerabilities',
