@@ -146,6 +146,14 @@ Contributions are what make the open source community such an amazing place to l
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
+<!-- TODO -->
+
+## TODOs:
+
+- [ ] Add command to check version between `package.json` and `package-lock.json`
+- [ ] Add command to check engine
+- [ ] Add command to check types
+
 <!-- CONTACT -->
 
 ## Contact
