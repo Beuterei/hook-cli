@@ -52,12 +52,12 @@ Run commands. For example using the hooks in `.husky`
 
 Runs a package audit and collects the results
 
-| Option                    | Description                                                             | Type                                          | default    |
-| ------------------------- | ----------------------------------------------------------------------- | --------------------------------------------- | ---------- |
-| `-m`, `--package-manager` | The package manager you want to use                                     | `yarn`, `npm`                                 | `npm`      |
-| `-l`, `--audit-level`     | The severity of the vulnerabilities what the script will report         | `info`, `low`, `moderate`, `high`, `critical` | `critical` |
-| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code | `boolean`                                     | `false`    |
-| `-p`, `--prod`            | If true only run audit for prod dependencies and skip dev ones          | `boolean`                                     | `false`    |
+| Option                    | Description                                                                                     | Type                                          | default    |
+| ------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------- | ---------- |
+| `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently | `yarn`, `npm`                                 | `npm`      |
+| `-l`, `--audit-level`     | The severity of the vulnerabilities what the script will report                                 | `info`, `low`, `moderate`, `high`, `critical` | `critical` |
+| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code                         | `boolean`                                     | `false`    |
+| `-p`, `--prod`            | If true only run audit for prod dependencies and skip dev ones                                  | `boolean`                                     | `false`    |
 
 ##### Example usage
 
@@ -85,20 +85,53 @@ npx hook-clicheckForVulnerabilities --prod
 npx hook-cli checkForVulnerabilities -l high -m yarn -n -p
 ```
 
+#### updateReminder
+
+Prints a list of packages that have updates
+
+| Option                    | Description                                                                                     | Type          | default |
+| ------------------------- | ----------------------------------------------------------------------------------------------- | ------------- | ------- |
+| `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently | `yarn`, `npm` | `npm`   |
+| `-f`, `--fail`            | If true it will exit with a non zero in case of updates                                         | `boolean`     | `false` |
+
+##### Example usage
+
+```bash
+npx hook-cli updateReminder
+```
+
+```bash
+npx hook-cli updateReminder - yarn
+```
+
+```bash
+npx hook-cli updateReminder -f
+```
+
+```bash
+npx hook-cli updateReminder - yarn -f
+```
+
 <!-- USEFUL -->
 
 ## Useful
 
-- Print help page for command
+-   Print help page for command
 
 ```bash
 npx hook-cli [command] --help
 ```
 
-- Test command during development
+-   Test command during development (Exit codes get not correctly forwarded)
 
 ```bash
-npm run hook-cli -- [command] --help
+npm run hook-cli -- [command]
+```
+
+-   Test command during development with correct exi code
+
+```bash
+npx ts-node src/index.ts [command]
 ```
 
 <!-- CONTRIBUTING -->

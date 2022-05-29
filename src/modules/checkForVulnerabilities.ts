@@ -3,6 +3,8 @@ import Listr from 'listr';
 
 import { registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
+import { NPMOutputParser } from '../util/npm.helper';
+import { YarnOutputParser } from '../util/yarn.helper';
 
 interface AuditResult {
     info: number;
@@ -12,10 +14,19 @@ interface AuditResult {
     critical: number;
 }
 
-interface YarnObject {
-    type: string;
-    data: unknown;
-}
+const filterAuditResult = (auditResult: unknown): AuditResult => {
+    if (isAuditResult(auditResult)) {
+        return {
+            info: auditResult.info,
+            low: auditResult.low,
+            moderate: auditResult.moderate,
+            high: auditResult.high,
+            critical: auditResult.critical,
+        };
+    }
+
+    throw new Error('Package manager returned unexpected json');
+};
 
 const isAuditResult = (obj: any): obj is AuditResult =>
     Object.prototype.hasOwnProperty.call(obj, 'info') &&
@@ -28,52 +39,6 @@ const isAuditResult = (obj: any): obj is AuditResult =>
     typeof obj.high === 'number' &&
     Object.prototype.hasOwnProperty.call(obj, 'critical') &&
     typeof obj.critical === 'number';
-
-const isYarnObject = (obj: any): obj is YarnObject =>
-    Object.prototype.hasOwnProperty.call(obj, 'type') &&
-    typeof obj.type === 'string' &&
-    Object.prototype.hasOwnProperty.call(obj, 'data');
-
-const NPMJsonParser = (stdout: string): AuditResult => {
-    const outputObj = JSON.parse(stdout);
-
-    if (Object.prototype.hasOwnProperty.call(outputObj, 'message')) {
-        throw new Error(outputObj.message);
-    }
-
-    const auditResult = outputObj.metadata.vulnerabilities;
-    if (isAuditResult(auditResult)) {
-        return auditResult;
-    }
-
-    throw new Error('Unable to parse npm json response');
-};
-
-const YarnJsonParser = (stdout: string, stderr: string): AuditResult => {
-    const rawOutputArr = stdout.split(/\r?\n/);
-    const rawErrorArr = stderr.split(/\r?\n/);
-
-    // filter empty elements for new line at the end
-    const outputObj = JSON.parse(`[${rawOutputArr.filter(el => el).join()}]`) as Array<unknown>;
-    const errorObj = JSON.parse(`[${rawErrorArr.filter(el => el).join()}]`) as Array<unknown>;
-
-    const error = errorObj.find(el => isYarnObject(el) && el.type === 'error') as YarnObject;
-    if (error) {
-        throw new Error(typeof error.data === 'string' ? error.data : 'Unknown error');
-    }
-
-    const result = outputObj.find(
-        el => isYarnObject(el) && el.type === 'auditSummary',
-    ) as YarnObject;
-    if (result) {
-        const auditResult = (result.data as { vulnerabilities: unknown }).vulnerabilities;
-        if (isAuditResult(auditResult)) {
-            return auditResult;
-        }
-    }
-
-    throw new Error('Unable to parse yarn json response');
-};
 
 const auditCommandBuilder = (packageManager: string, prod: boolean) => {
     let command = `${packageManager} audit`;
@@ -89,8 +54,7 @@ const auditCommandBuilder = (packageManager: string, prod: boolean) => {
     return command;
 };
 
-const totalVulnerabilities = (obj: AuditResult) =>
-    obj.info + obj.low + obj.moderate + obj.high + obj.critical; // be specific because the obj could have other stuff in it
+const totalVulnerabilities = (obj: AuditResult) => Object.values(obj).reduce((a, b) => a + b);
 
 export = registerCommandModule({
     command: 'checkForVulnerabilities',
@@ -99,7 +63,7 @@ export = registerCommandModule({
         'package-manager': {
             alias: 'm',
             choices: ['npm', 'yarn'],
-            description: 'The package manager you want to use',
+            description: 'The package manager you want to use. Keep in mind that both package managers report differently',
             default: 'npm',
         },
         'audit-level': {
@@ -141,9 +105,28 @@ export = registerCommandModule({
                             if (e instanceof ExecuteError) {
                                 let auditResult: AuditResult;
                                 if (packageManager === 'npm') {
-                                    auditResult = NPMJsonParser(e.stdout);
+                                    const result = (
+                                        NPMOutputParser(e.stdout) as {
+                                            metadata: { vulnerabilities: unknown };
+                                        }
+                                    ).metadata.vulnerabilities;
+
+                                    auditResult = filterAuditResult(result);
                                 } else if (packageManager === 'yarn') {
-                                    auditResult = YarnJsonParser(e.stdout, e.stderr);
+                                    const result = YarnOutputParser(e.stdout, e.stderr);
+
+                                    const auditSummary = result.find(
+                                        el => el.type === 'auditSummary',
+                                    );
+                                    if (auditSummary) {
+                                        const vulnerabilities = (
+                                            auditSummary.data as { vulnerabilities: unknown }
+                                        ).vulnerabilities;
+
+                                        auditResult = filterAuditResult(vulnerabilities);
+                                    } else {
+                                        throw new Error('Yarn returned unexpected json');
+                                    }
                                 } else {
                                     throw new Error('Unknown package manager');
                                 }
@@ -179,9 +162,11 @@ export = registerCommandModule({
                                         break;
                                 }
 
+                                const auditCount = totalVulnerabilities(auditResult);
+
                                 if (levelMet) {
                                     task.title = `Found ${color.red(
-                                        totalVulnerabilities(auditResult),
+                                        auditCount,
                                     )} level ${color.bgRed(
                                         auditLevel,
                                     )} or higher vulnerabilities. Run '${color.cyan(
@@ -191,7 +176,7 @@ export = registerCommandModule({
                                 }
 
                                 task.title = `Found ${color.cyan(
-                                    totalVulnerabilities(auditResult),
+                                    auditCount,
                                 )} vulnerabilities of lower level then ${color.cyan(auditLevel)}`;
                                 return Promise.resolve(); // We found some but we dont care because the level is not right
                             }

@@ -1,5 +1,8 @@
 .npmrc
 
+# i test locally sometimes with yarn. But it should not be commited
+yarn.lock
+
 # Created by https://www.toptal.com/developers/gitignore/api/visualstudiocode,webstorm,phpstorm,node,git,windows,macos
 # Edit at https://www.toptal.com/developers/gitignore?templates=visualstudiocode,webstorm,phpstorm,node,git,windows,macos
 

@@ -31,6 +31,7 @@
   "homepage": "https://github.com/beuluis/hook-cli#readme",
   "dependencies": {
     "console-log-colors": "^0.2.3",
+    "console-table-printer": "^2.11.0",
     "listr": "^0.14.3",
     "yargs": "^17.5.1"
   },
@@ -39,6 +40,7 @@
     "@types/listr": "^0.14.4",
     "@types/node": "^17.0.35",
     "@types/yargs": "^17.0.10",
+    "nodemon": "^1.19.4",
     "ts-node": "^10.8.0",
     "tslib": "^2.4.0",
     "typescript": "^4.7.2"
