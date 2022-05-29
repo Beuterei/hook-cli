@@ -1,6 +1,6 @@
 {
   "name": "@beuluis/hook-cli",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A small hook cli that can be used with for example husky",
   "bin": {
     "hook-cli": "./dist/index.js",
