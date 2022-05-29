@@ -29,3 +29,6 @@ export const registerCommandModule = <ExtendArgs extends ArgsObj, ExtendOptions 
     module: ModifiedCommandModule<ExtendArgs, ExtendOptions>,
     // reexport the module because this just do some magic with parameter types
 ) => module;
+
+// custom error instance to throw errors that can be ignored by options as fail or no-fail
+export class HookFailedError extends Error {};

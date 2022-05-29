@@ -2,7 +2,7 @@ import { color } from 'console-log-colors';
 import Listr from 'listr';
 import { Table } from 'console-table-printer';
 
-import { registerCommandModule } from '../util/commandModule.helper';
+import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
 import { NPMOutputParser } from '../util/npm.helper';
 import { YarnObject, YarnOutputParser } from '../util/yarn.helper';
@@ -130,7 +130,7 @@ export = registerCommandModule({
                                 task.title = `Found ${color.red(
                                     outdatedList.length,
                                 )} packages to update:`;
-                                throw new Error();
+                                throw new HookFailedError();
                             }
 
                             throw new Error('Unknown error');
@@ -154,11 +154,15 @@ export = registerCommandModule({
                     }).printTable();
                 }
 
-                if (fail) {
-                    process.exit(1);
+                if (e instanceof HookFailedError) {
+                    if (fail) {
+                        process.exit(1);
+                    }
+
+                    process.exit(0);
                 }
 
-                process.exit(0);
+                process.exit(1);
             });
     },
 });

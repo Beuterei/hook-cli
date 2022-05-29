@@ -1,7 +1,7 @@
 import { color } from 'console-log-colors';
 import Listr from 'listr';
 
-import { registerCommandModule } from '../util/commandModule.helper';
+import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
 import { NPMOutputParser } from '../util/npm.helper';
 import { YarnOutputParser } from '../util/yarn.helper';
@@ -172,7 +172,7 @@ export = registerCommandModule({
                                     )} or higher vulnerabilities. Run '${color.cyan(
                                         `${auditCommandBuilder(packageManager, prod)}`,
                                     )}' for more information`;
-                                    throw new Error();
+                                    throw new HookFailedError();
                                 }
 
                                 task.title = `Found ${color.cyan(
@@ -189,8 +189,8 @@ export = registerCommandModule({
         tasks
             .run()
             .then(() => process.exit(0))
-            .catch(() => {
-                if (noFail) {
+            .catch((e) => {
+                if (e instanceof HookFailedError && noFail) {
                     process.exit(0);
                 }
 
