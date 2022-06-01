@@ -85,7 +85,7 @@ const transformYarnOutput = (arr: YarnObject[]): GenericOutdated[] => {
     return result;
 };
 
-export = registerCommandModule({
+export = registerCommandModule()({
     command: 'updateReminder',
     describe: 'Prints a list of packages that have updates',
     // TODO: give more options to define version range

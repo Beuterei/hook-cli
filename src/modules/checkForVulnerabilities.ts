@@ -56,14 +56,15 @@ const auditCommandBuilder = (packageManager: string, prod: boolean) => {
 
 const totalVulnerabilities = (obj: AuditResult) => Object.values(obj).reduce((a, b) => a + b);
 
-export = registerCommandModule({
+export = registerCommandModule()({
     command: 'checkForVulnerabilities',
     describe: 'Runs a package audit and collects the results',
     builder: {
         'package-manager': {
             alias: 'm',
             choices: ['npm', 'yarn'],
-            description: 'The package manager you want to use. Keep in mind that both package managers report differently',
+            description:
+                'The package manager you want to use. Keep in mind that both package managers report differently',
             default: 'npm',
         },
         'audit-level': {
@@ -189,7 +190,7 @@ export = registerCommandModule({
         tasks
             .run()
             .then(() => process.exit(0))
-            .catch((e) => {
+            .catch(e => {
                 if (e instanceof HookFailedError && noFail) {
                     process.exit(0);
                 }

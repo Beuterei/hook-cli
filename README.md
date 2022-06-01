@@ -40,7 +40,7 @@ npm i -D @beuluis/hook-cli
 
 ### Usage
 
-Run commands. For example using the hooks in `.husky`
+Run commands. For example using the hooks in `.husky`.
 
     ```bash
     npx hook-cli [command] [...]
@@ -50,14 +50,14 @@ Run commands. For example using the hooks in `.husky`
 
 #### checkForVulnerabilities
 
-Runs a package audit and collects the results
+Runs a package audit and collects the results.
 
-| Option                    | Description                                                                                     | Type                                          | default    |
-| ------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------- | ---------- |
-| `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently | `yarn`, `npm`                                 | `npm`      |
-| `-l`, `--audit-level`     | The severity of the vulnerabilities what the script will report                                 | `info`, `low`, `moderate`, `high`, `critical` | `critical` |
-| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code                         | `boolean`                                     | `false`    |
-| `-p`, `--prod`            | If true only run audit for prod dependencies and skip dev ones                                  | `boolean`                                     | `false`    |
+| Option                    | Description                                                                                      | Type                                          | default    |
+| ------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------- | ---------- |
+| `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently. | `yarn`, `npm`                                 | `npm`      |
+| `-l`, `--audit-level`     | The severity of the vulnerabilities what the script will report.                                 | `info`, `low`, `moderate`, `high`, `critical` | `critical` |
+| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`                                     | `false`    |
+| `-p`, `--prod`            | If true only run audit for prod dependencies and skip dev ones.                                  | `boolean`                                     | `false`    |
 
 ##### Example usage
 
@@ -87,12 +87,12 @@ npx hook-cli checkForVulnerabilities -l high -m yarn -n -p
 
 #### updateReminder
 
-Prints a list of packages that have updates
+Prints a list of packages that have updates.
 
-| Option                    | Description                                                                                     | Type          | default |
-| ------------------------- | ----------------------------------------------------------------------------------------------- | ------------- | ------- |
-| `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently | `yarn`, `npm` | `npm`   |
-| `-f`, `--fail`            | If true it will exit with a non zero in case of updates                                         | `boolean`     | `false` |
+| Option                    | Description                                                                                      | Type          | default |
+| ------------------------- | ------------------------------------------------------------------------------------------------ | ------------- | ------- |
+| `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently. | `yarn`, `npm` | `npm`   |
+| `-f`, `--fail`            | If true it will exit with a non zero in case of updates.                                         | `boolean`     | `false` |
 
 ##### Example usage
 
@@ -112,6 +112,28 @@ npx hook-cli updateReminder -f
 npx hook-cli updateReminder - yarn -f
 ```
 
+<!-- REGISTER NEW COMMAND -->
+
+## Register new command
+
+1. Create new command module at `src/modules`.
+
+```bash
+touch src/modules/helloWorld.ts
+```
+
+2. Use the register helper to register a module and export it. See the Jsdoc for more usage information.
+
+```typescript
+import { registerCommandModule } from '../util/commandModule.helper';
+
+export = registerCommandModule()({
+    command: 'helloWorld',
+    describe: 'HelloWorld',
+    handler: () => console.log('HelloWorld'),
+});
+```
+
 <!-- USEFUL -->
 
 ## Useful
@@ -122,13 +144,13 @@ npx hook-cli updateReminder - yarn -f
 npx hook-cli [command] --help
 ```
 
--   Test command during development (Exit codes get not correctly forwarded)
+-   Test command during development (Exit codes get not correctly forwarded).
 
 ```bash
 npm run hook-cli -- [command]
 ```
 
--   Test command during development with correct exi code
+-   Test command during development with correct exi code.
 
 ```bash
 npx ts-node src/index.ts [command]
@@ -150,9 +172,10 @@ Contributions are what make the open source community such an amazing place to l
 
 ## TODOs:
 
-- [ ] Add command to check version between `package.json` and `package-lock.json`
-- [ ] Add command to check engine
-- [ ] Add command to check types
+-   [ ] Add command to check version between `package.json` and `package-lock.json`
+-   [ ] Add command to check engine
+-   [ ] Add command to check types
+-   [ ] Add command to check peerDependencies
 
 <!-- CONTACT -->
 

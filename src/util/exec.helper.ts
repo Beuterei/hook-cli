@@ -12,6 +12,12 @@ export class ExecuteError extends Error {
     }
 }
 
+/**
+ * Execute a command and collects the results
+ * @example <caption>Execute command</caption>
+ * const result = await execute('echo HelloWorld');
+ * console.log(result.stdout)
+ */
 export const execute = (command: string): Promise<ExecuteResolve> =>
     new Promise((resolve, rejects) => {
         let stdout = '';

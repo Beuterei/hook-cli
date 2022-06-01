@@ -8,7 +8,13 @@ const isYarnObject = (obj: any): obj is YarnObject =>
     typeof obj.type === 'string' &&
     Object.prototype.hasOwnProperty.call(obj, 'data');
 
-// returns stdout as parsed yarn object array
+/**
+ * Parse a yarn --json command output (One object per line).
+ * Throws error if it encounters invalid json or a error data type from yarn
+ * @example <caption>Execute command</caption>
+ * const commandOut = await execute('yarn outdated --json');
+ * const result = YarnOutputParser(commandOut.stdout, commandOut.stderr);
+ */
 export const YarnOutputParser = (stdout: string, stderr: string): YarnObject[] => {
     const rawOutputArr = stdout.split(/\r?\n/);
     const rawErrorArr = stderr.split(/\r?\n/);
