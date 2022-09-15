@@ -1,18 +1,30 @@
 import { color } from 'console-log-colors';
 import Listr from 'listr';
-
 import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
 import { NPMOutputParser } from '../util/npm.helper';
 import { YarnOutputParser } from '../util/yarn.helper';
 
 interface AuditResult {
+    critical: number;
+    high: number;
     info: number;
     low: number;
     moderate: number;
-    high: number;
-    critical: number;
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isAuditResult = (object: any): object is AuditResult =>
+    Object.prototype.hasOwnProperty.call(object, 'info') &&
+    typeof object.info === 'number' &&
+    Object.prototype.hasOwnProperty.call(object, 'low') &&
+    typeof object.low === 'number' &&
+    Object.prototype.hasOwnProperty.call(object, 'moderate') &&
+    typeof object.moderate === 'number' &&
+    Object.prototype.hasOwnProperty.call(object, 'high') &&
+    typeof object.high === 'number' &&
+    Object.prototype.hasOwnProperty.call(object, 'critical') &&
+    typeof object.critical === 'number';
 
 const filterAuditResult = (auditResult: unknown): AuditResult => {
     if (isAuditResult(auditResult)) {
@@ -28,22 +40,10 @@ const filterAuditResult = (auditResult: unknown): AuditResult => {
     throw new Error('Package manager returned unexpected json');
 };
 
-const isAuditResult = (obj: any): obj is AuditResult =>
-    Object.prototype.hasOwnProperty.call(obj, 'info') &&
-    typeof obj.info === 'number' &&
-    Object.prototype.hasOwnProperty.call(obj, 'low') &&
-    typeof obj.low === 'number' &&
-    Object.prototype.hasOwnProperty.call(obj, 'moderate') &&
-    typeof obj.moderate === 'number' &&
-    Object.prototype.hasOwnProperty.call(obj, 'high') &&
-    typeof obj.high === 'number' &&
-    Object.prototype.hasOwnProperty.call(obj, 'critical') &&
-    typeof obj.critical === 'number';
-
-const auditCommandBuilder = (packageManager: string, prod: boolean) => {
+const auditCommandBuilder = (packageManager: string, production: boolean) => {
     let command = `${packageManager} audit`;
 
-    if (prod) {
+    if (production) {
         if (packageManager === 'yarn') {
             command += ' --groups dependencies';
         } else if (packageManager === 'npm') {
@@ -54,7 +54,7 @@ const auditCommandBuilder = (packageManager: string, prod: boolean) => {
     return command;
 };
 
-const totalVulnerabilities = (obj: AuditResult) => Object.values(obj).reduce((a, b) => a + b);
+const totalVulnerabilities = (object: AuditResult) => Object.values(object).reduce((a, b) => a + b);
 
 export = registerCommandModule()({
     command: 'checkForVulnerabilities',
@@ -96,28 +96,29 @@ export = registerCommandModule()({
         const tasks = new Listr([
             {
                 title: `Check for vulnerabilities with '${color.cyan(`${packageManager} audit`)}'`,
-                task: (_ctx, task) =>
-                    execute(`${auditCommandBuilder(packageManager, prod)} --json`)
+                task: async (_context, task) =>
+                    await execute(`${auditCommandBuilder(packageManager, prod)} --json`)
                         .then(
                             () =>
                                 (task.title = `No package vulnerabilities with level ${auditLevel} or higher found`),
                         )
-                        .catch((e: unknown) => {
-                            if (e instanceof ExecuteError) {
+                        // eslint-disable-next-line complexity
+                        .catch(async (error: unknown) => {
+                            if (error instanceof ExecuteError) {
                                 let auditResult: AuditResult;
                                 if (packageManager === 'npm') {
                                     const result = (
-                                        NPMOutputParser(e.stdout) as {
+                                        NPMOutputParser(error.stdout) as {
                                             metadata: { vulnerabilities: unknown };
                                         }
                                     ).metadata.vulnerabilities;
 
                                     auditResult = filterAuditResult(result);
                                 } else if (packageManager === 'yarn') {
-                                    const result = YarnOutputParser(e.stdout, e.stderr);
+                                    const result = YarnOutputParser(error.stdout, error.stderr);
 
                                     const auditSummary = result.find(
-                                        el => el.type === 'auditSummary',
+                                        element => element.type === 'auditSummary',
                                     );
                                     if (auditSummary) {
                                         const vulnerabilities = (
@@ -132,7 +133,7 @@ export = registerCommandModule()({
                                     throw new Error('Unknown package manager');
                                 }
 
-                                let levelMet = false;
+                                let levelMet: boolean;
                                 switch (auditLevel) {
                                     case 'info':
                                         levelMet =
@@ -161,6 +162,8 @@ export = registerCommandModule()({
                                     case 'critical':
                                         levelMet = auditResult.critical > 0;
                                         break;
+                                    default:
+                                        levelMet = false;
                                 }
 
                                 const auditCount = totalVulnerabilities(auditResult);
@@ -179,7 +182,7 @@ export = registerCommandModule()({
                                 task.title = `Found ${color.cyan(
                                     auditCount,
                                 )} vulnerabilities of lower level then ${color.cyan(auditLevel)}`;
-                                return Promise.resolve(); // We found some but we dont care because the level is not right
+                                return; // We found some but we dont care because the level is not right
                             }
 
                             throw new Error('Unknown error');
@@ -187,15 +190,15 @@ export = registerCommandModule()({
             },
         ]);
 
-        tasks
-            .run()
-            .then(() => process.exit(0))
-            .catch(e => {
-                if (e instanceof HookFailedError && noFail) {
-                    process.exit(0);
-                }
+        try {
+            await tasks.run();
+            process.exit(0);
+        } catch (error) {
+            if (error instanceof HookFailedError && noFail) {
+                process.exit(0);
+            }
 
-                process.exit(1);
-            });
+            process.exit(1);
+        }
     },
 });

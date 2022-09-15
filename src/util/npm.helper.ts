@@ -1,28 +1,29 @@
-interface NPMErrorObj {
+interface NPMErrorObject {
     message: string;
 }
 
-const isNPMError = (obj: unknown): obj is NPMErrorObj =>
-    typeof obj === 'object' && Object.prototype.hasOwnProperty.call(obj, 'message');
+const isNPMError = (object: unknown): object is NPMErrorObject =>
+    typeof object === 'object' && Object.prototype.hasOwnProperty.call(object, 'message');
 
 /**
  * Parse a npm --json command output.
  * Throws error if it encounters invalid json or a error message from npm
+ *
  * @example <caption>Execute command</caption>
  * const result = NPMOutputParser(await execute('npm outdated --json').stdout);
  */
 export const NPMOutputParser = (stdout: string): Object => {
-    let outputObj = {};
+    let outputObject = {};
 
     try {
-        outputObj = JSON.parse(stdout);
-    } catch (e) {
+        outputObject = JSON.parse(stdout);
+    } catch {
         throw new Error('Unable to parse npm json response');
     }
 
-    if (isNPMError(outputObj)) {
-        throw new Error(outputObj.message);
+    if (isNPMError(outputObject)) {
+        throw new Error(outputObject.message);
     }
 
-    return outputObj;
+    return outputObject;
 };

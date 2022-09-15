@@ -1,51 +1,53 @@
 import { color } from 'console-log-colors';
-import Listr from 'listr';
 import { Table } from 'console-table-printer';
-
+import Listr from 'listr';
 import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
 import { NPMOutputParser } from '../util/npm.helper';
-import { YarnObject, YarnOutputParser } from '../util/yarn.helper';
+import type { YarnObject } from '../util/yarn.helper';
+import { YarnOutputParser } from '../util/yarn.helper';
 
 interface OutdatedNpm {
     current: string;
-    wanted: string;
     latest: string;
+    wanted: string;
 }
 
 interface GenericOutdated {
-    package: string;
     current: string;
-    wanted: string;
     latest: string;
+    package: string;
+    wanted: string;
 }
 
 interface YarnOutdatedTable {
-    head: string[];
     body: string[][];
+    head: string[];
 }
 
-const isOutdatedNpm = (obj: any): obj is OutdatedNpm =>
-    Object.prototype.hasOwnProperty.call(obj, 'current') &&
-    typeof obj.current === 'string' &&
-    Object.prototype.hasOwnProperty.call(obj, 'wanted') &&
-    typeof obj.wanted === 'string' &&
-    Object.prototype.hasOwnProperty.call(obj, 'latest') &&
-    typeof obj.latest === 'string';
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isOutdatedNpm = (object: any): object is OutdatedNpm =>
+    Object.prototype.hasOwnProperty.call(object, 'current') &&
+    typeof object.current === 'string' &&
+    Object.prototype.hasOwnProperty.call(object, 'wanted') &&
+    typeof object.wanted === 'string' &&
+    Object.prototype.hasOwnProperty.call(object, 'latest') &&
+    typeof object.latest === 'string';
 
-const transformNpmOutput = (obj: Object): GenericOutdated[] => {
-    let result: GenericOutdated[] = [];
+const transformNpmOutput = (object: Object): GenericOutdated[] => {
+    const result: GenericOutdated[] = [];
 
-    for (let key in obj) {
+    // eslint-disable-next-line guard-for-in
+    for (const key in object) {
         // TODO: better typing
         // but i mean there has to be a key if we loop over it right...? Right JavaScript?
-        const el = (obj as { [index: string]: unknown })[key];
-        if (isOutdatedNpm(el)) {
+        const element = (object as { [index: string]: unknown })[key];
+        if (isOutdatedNpm(element)) {
             result.push({
                 package: key,
-                current: el.current,
-                wanted: el.wanted,
-                latest: el.latest,
+                current: element.current,
+                wanted: element.wanted,
+                latest: element.latest,
             });
         }
     }
@@ -54,26 +56,27 @@ const transformNpmOutput = (obj: Object): GenericOutdated[] => {
 };
 
 // I could to a more in depth type guard but i don´t want to. So we will just assume that yarn report right
-const isYarnOutdatedTable = (obj: any): obj is YarnOutdatedTable =>
-    Object.prototype.hasOwnProperty.call(obj, 'head') &&
-    Array.isArray(obj.head) &&
-    obj.head[0] === 'Package' &&
-    obj.head[1] === 'Current' &&
-    obj.head[2] === 'Wanted' &&
-    obj.head[3] === 'Latest' &&
-    Object.prototype.hasOwnProperty.call(obj, 'body') &&
-    Array.isArray(obj.body);
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const isYarnOutdatedTable = (object: any): object is YarnOutdatedTable =>
+    Object.prototype.hasOwnProperty.call(object, 'head') &&
+    Array.isArray(object.head) &&
+    object.head[0] === 'Package' &&
+    object.head[1] === 'Current' &&
+    object.head[2] === 'Wanted' &&
+    object.head[3] === 'Latest' &&
+    Object.prototype.hasOwnProperty.call(object, 'body') &&
+    Array.isArray(object.body);
 
-const transformYarnOutput = (arr: YarnObject[]): GenericOutdated[] => {
-    const outdatedTable = arr.find(el => el.type === 'table');
+const transformYarnOutput = (array: YarnObject[]): GenericOutdated[] => {
+    const outdatedTable = array.find(element => element.type === 'table');
 
     if (!outdatedTable || !isYarnOutdatedTable(outdatedTable.data)) {
         throw new Error('Yarn returned unexpected json');
     }
 
-    let result: GenericOutdated[] = [];
+    const result: GenericOutdated[] = [];
 
-    for (var outdated of outdatedTable.data.body) {
+    for (const outdated of outdatedTable.data.body) {
         result.push({
             package: outdated[0],
             current: outdated[1],
@@ -109,24 +112,26 @@ export = registerCommandModule()({
         const tasks = new Listr([
             {
                 title: `Check for updates with '${color.cyan(`${packageManager} outdated`)}'`,
-                task: (ctx, task) =>
-                    execute(`${packageManager} outdated --json`)
+                task: async (context, task) =>
+                    await execute(`${packageManager} outdated --json`)
                         .then(() => (task.title = `No package updates found`))
-                        .catch((e: unknown) => {
-                            if (e instanceof ExecuteError) {
+                        .catch((error: unknown) => {
+                            if (error instanceof ExecuteError) {
                                 let outdatedList: GenericOutdated[];
 
                                 if (packageManager === 'npm') {
-                                    outdatedList = transformNpmOutput(NPMOutputParser(e.stdout));
+                                    outdatedList = transformNpmOutput(
+                                        NPMOutputParser(error.stdout),
+                                    );
                                 } else if (packageManager === 'yarn') {
                                     outdatedList = transformYarnOutput(
-                                        YarnOutputParser(e.stdout, e.stderr),
+                                        YarnOutputParser(error.stdout, error.stderr),
                                     );
                                 } else {
                                     throw new Error('Unknown package manager');
                                 }
 
-                                ctx.outdatedList = outdatedList;
+                                context.outdatedList = outdatedList;
                                 task.title = `Found ${color.red(
                                     outdatedList.length,
                                 )} packages to update:`;
@@ -138,31 +143,32 @@ export = registerCommandModule()({
             },
         ]);
 
-        tasks
-            .run()
-            .then(() => process.exit(0))
-            .catch(e => {
-                if (e.context.outdatedList) {
-                    new Table({
-                        columns: [
-                            { name: 'package', title: 'Package', alignment: 'left' },
-                            { name: 'current', title: 'Current', alignment: 'left', color: 'red' },
-                            { name: 'wanted', title: 'Wanted', alignment: 'left', color: 'cyan' },
-                            { name: 'latest', title: 'Latest', alignment: 'left', color: 'green' },
-                        ],
-                        rows: e.context.outdatedList,
-                    }).printTable();
+        try {
+            await tasks.run();
+            process.exit(0);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            if (error.context.outdatedList) {
+                new Table({
+                    columns: [
+                        { name: 'package', title: 'Package', alignment: 'left' },
+                        { name: 'current', title: 'Current', alignment: 'left', color: 'red' },
+                        { name: 'wanted', title: 'Wanted', alignment: 'left', color: 'cyan' },
+                        { name: 'latest', title: 'Latest', alignment: 'left', color: 'green' },
+                    ],
+                    rows: error.context.outdatedList,
+                }).printTable();
+            }
+
+            if (error instanceof HookFailedError) {
+                if (fail) {
+                    process.exit(1);
                 }
 
-                if (e instanceof HookFailedError) {
-                    if (fail) {
-                        process.exit(1);
-                    }
+                process.exit(0);
+            }
 
-                    process.exit(0);
-                }
-
-                process.exit(1);
-            });
+            process.exit(1);
+        }
     },
 });

@@ -17,7 +17,9 @@
     "prepack": "npm run build",
     "build": "tsc --build",
     "hook-cli": "ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\""
+    "test": "npm run hook-cli -- --help",
+    "lint": "eslint .",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",
@@ -36,10 +38,15 @@
     "yargs": "^17.5.1"
   },
   "devDependencies": {
-    "@beuluis/prettier-config": "^1.0.2",
+    "@beuluis/eslint-config": "^1.0.2",
+    "@beuluis/hook-cli": "^1.1.2",
+    "@beuluis/prettier-config": "^2.0.1",
     "@types/listr": "^0.14.4",
-    "@types/node": "^17.0.35",
+    "@types/node": "^18.7.18",
     "@types/yargs": "^17.0.10",
+    "eslint": "^8.23.1",
+    "husky": "^8.0.1",
+    "lint-staged": "^13.0.3",
     "ts-node": "^10.8.0",
     "tslib": "^2.4.0",
     "typescript": "^4.7.2"
@@ -50,5 +57,14 @@
     "husky",
     "husky-hooks"
   ],
-  "prettier": "@beuluis/prettier-config"
+  "prettier": "@beuluis/prettier-config",
+  "lint-staged": {
+    "*.md": [
+      "prettier --write"
+    ],
+    "*.{js,ts,json,yml,yaml}": [
+      "prettier --write",
+      "eslint"
+    ]
+  }
 }
