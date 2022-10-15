@@ -19,6 +19,7 @@
     "hook-cli": "ts-node src/index.ts",
     "test": "npm run hook-cli -- --help",
     "lint": "eslint .",
+    "format": "prettier . --check",
     "prepare": "husky install"
   },
   "repository": {
@@ -67,5 +68,9 @@
       "prettier --write",
       "eslint"
     ]
+  },
+  "np": {
+    "tests": false,
+    "publish": false
   }
 }
