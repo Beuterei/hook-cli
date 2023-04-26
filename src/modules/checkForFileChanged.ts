@@ -25,7 +25,7 @@ export = registerCommandModule<{ filePath: string }>()({
         const { 'no-fail': noFail, branch, filePath } = argv;
         const tasks = new Listr([
             {
-                title: `Check if '${color.cyan(filePath)}' differs from '${color.cyan(branch)}'`,
+                title: `Check if ${color.cyan(filePath)} differs from ${color.cyan(branch)}`,
                 task: async (_context, task) =>
                     await execute(`! git diff origin/${branch} --cached --exit-code -- ${filePath}`)
                         .then(
@@ -41,6 +41,7 @@ export = registerCommandModule<{ filePath: string }>()({
                                 )}`;
                                 throw new HookFailedError();
                             } else {
+                                // TODO: recheck if we dont have a message for such cases
                                 // eslint-disable-next-line unicorn/prefer-type-error
                                 throw new Error('Unknown error');
                             }

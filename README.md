@@ -112,6 +112,20 @@ npx hook-clicheckForVulnerabilities --prod
 npx hook-cli checkForVulnerabilities -l high -m yarn -n -p
 ```
 
+#### checkPackageVersion
+
+Check if the version field is the same for package.json and package-lock.json
+
+| Option            | Description                                                              | Type      | default |
+| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+
+##### Example usage
+
+```bash
+npx hook-cli checkPackageVersion
+```
+
 #### updateReminder
 
 Prints a list of packages that have updates.
