@@ -48,6 +48,33 @@ Run commands. For example using the hooks in `.husky`.
 
 ### Commands
 
+#### checkForFileChanged
+
+Check if a staged file like a changelog was changed locale or remote compared to another branch
+
+| Option            | Description                                                              | Type      | default |
+| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-b`, `--branch`  | Branch to compare to.                                                    | `string`  | `main`  |
+| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `true`  |
+
+##### Example usage
+
+```bash
+npx hook-cli checkForFileChanged CHANGELOG.md
+```
+
+```bash
+npx hook-cli checkForFileChanged CHANGELOG.md -b trunk
+```
+
+```bash
+npx hook-cli checkForFileChanged CHANGELOG.md -n
+```
+
+```bash
+npx hook-cli checkForFileChanged CHANGELOG.md -b trunk -n
+```
+
 #### checkForVulnerabilities
 
 Runs a package audit and collects the results.
@@ -56,8 +83,8 @@ Runs a package audit and collects the results.
 | ------------------------- | ------------------------------------------------------------------------------------------------ | --------------------------------------------- | ---------- |
 | `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently. | `yarn`, `npm`                                 | `npm`      |
 | `-l`, `--audit-level`     | The severity of the vulnerabilities what the script will report.                                 | `info`, `low`, `moderate`, `high`, `critical` | `critical` |
-| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`                                     | `false`    |
 | `-p`, `--prod`            | If true only run audit for prod dependencies and skip dev ones.                                  | `boolean`                                     | `false`    |
+| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`                                     | `false`    |
 
 ##### Example usage
 
@@ -92,7 +119,7 @@ Prints a list of packages that have updates.
 | Option                    | Description                                                                                      | Type          | default |
 | ------------------------- | ------------------------------------------------------------------------------------------------ | ------------- | ------- |
 | `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently. | `yarn`, `npm` | `npm`   |
-| `-f`, `--fail`            | If true it will exit with a non zero in case of updates.                                         | `boolean`     | `false` |
+| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`     | `true`  |
 
 ##### Example usage
 
@@ -101,15 +128,15 @@ npx hook-cli updateReminder
 ```
 
 ```bash
-npx hook-cli updateReminder - yarn
+npx hook-cli updateReminder -m yarn
 ```
 
 ```bash
-npx hook-cli updateReminder -f
+npx hook-cli updateReminder -n
 ```
 
 ```bash
-npx hook-cli updateReminder - yarn -f
+npx hook-cli updateReminder -m yarn -n
 ```
 
 <!-- REGISTER NEW COMMAND -->
