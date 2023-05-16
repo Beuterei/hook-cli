@@ -182,6 +182,25 @@ Check if the version field is the same for package.json and package-lock.json
 npx hook-cli checkPackageVersion
 ```
 
+#### checkPackageVersionInFile
+
+Check if the version field is the same for package.json and file
+
+| Option              | Description                                                              | Type      | default |
+| ------------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-p`, `--json-path` | Path in json file to check                                               | `string`  | ``      |
+| `-n`, `--no-fail`   | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+
+##### Example usage
+
+```bash
+npx hook-cli checkPackageVersionInFile hello.json -p 'path.version'
+```
+
+```bash
+npx hook-cli checkPackageVersionInFile hello.json -p 'path.version' -n
+```
+
 #### updateReminder
 
 Prints a list of packages that have updates.
