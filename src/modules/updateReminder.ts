@@ -100,18 +100,18 @@ export = registerCommandModule()({
                 'The package manager you want to use. Keep in mind that both package managers report differently',
             default: 'npm',
         },
-        fail: {
-            alias: 'f',
+        'no-fail': {
+            alias: 'n',
             type: 'boolean',
-            description: 'If true it will exit with a non zero in case of updates',
+            description: 'If true only prints warning messages and do not exit with not zero code',
             default: false,
         },
     },
     handler: async argv => {
-        const { 'package-manager': packageManager, fail } = argv;
+        const { 'package-manager': packageManager, 'no-fail': noFail } = argv;
         const tasks = new Listr([
             {
-                title: `Check for updates with '${color.cyan(`${packageManager} outdated`)}'`,
+                title: `Check for updates with ${color.cyan(`${packageManager} outdated`)}`,
                 task: async (context, task) =>
                     await execute(`${packageManager} outdated --json`)
                         .then(() => (task.title = `No package updates found`))
@@ -160,11 +160,7 @@ export = registerCommandModule()({
                 }).printTable();
             }
 
-            if (error instanceof HookFailedError) {
-                if (fail) {
-                    process.exit(1);
-                }
-
+            if (error instanceof HookFailedError && noFail) {
                 process.exit(0);
             }
 

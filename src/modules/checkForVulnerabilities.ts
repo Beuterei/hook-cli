@@ -95,7 +95,7 @@ export = registerCommandModule()({
         } = argv;
         const tasks = new Listr([
             {
-                title: `Check for vulnerabilities with '${color.cyan(`${packageManager} audit`)}'`,
+                title: `Check for vulnerabilities with ${color.cyan(`${packageManager} audit`)}`,
                 task: async (_context, task) =>
                     await execute(`${auditCommandBuilder(packageManager, prod)} --json`)
                         .then(
