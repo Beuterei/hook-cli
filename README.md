@@ -48,6 +48,62 @@ Run commands. For example using the hooks in `.husky`.
 
 ### Commands
 
+#### checkCommitMessageIssueKey
+
+Check the pattern of a commit message
+
+| Option            | Description                                                              | Type      | default |
+| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-p`, `--prefix`  | Prefix of the issue key.                                                 | `string`  | ``      |
+| `-m`, `--message` | Get message from command line instead of file.                           | `string`  | ``      |
+| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+
+##### Example usage
+
+```bash
+npx hook-cli checkCommitMessageIssueKey "$1" -p "HelloWorld"
+```
+
+```bash
+npx hook-cli checkCommitMessageIssueKey .git/COMMIT_EDITMSG -p "KEY"
+```
+
+```bash
+npx hook-cli checkCommitMessageIssueKey -m "KEY-12 message" -p "KEY"
+```
+
+```bash
+npx hook-cli checkCommitMessageIssueKey -m "KEY-12 message" -p "KEY" -n
+```
+
+#### checkCommitMessagePattern
+
+Check the pattern of a commit message
+
+| Option            | Description                                                              | Type      | default |
+| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-p`, `--pattern` | Regex pattern to check the message against.                              | `string`  | ``      |
+| `-m`, `--message` | Get message from command line instead of file.                           | `string`  | ``      |
+| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+
+##### Example usage
+
+```bash
+npx hook-cli checkCommitMessagePattern "$1" -p "HelloWorld"
+```
+
+```bash
+npx hook-cli checkCommitMessagePattern .git/COMMIT_EDITMSG -p "HelloWorld"
+```
+
+```bash
+npx hook-cli checkCommitMessagePattern -m "I say HelloWorld" -p "HelloWorld"
+```
+
+```bash
+npx hook-cli checkCommitMessagePattern -m "I say HelloWorld" -p "HelloWorld" -n
+```
+
 #### checkForFileChanged
 
 Check if a staged file like a changelog was changed locale or remote compared to another branch
@@ -133,7 +189,7 @@ Prints a list of packages that have updates.
 | Option                    | Description                                                                                      | Type          | default |
 | ------------------------- | ------------------------------------------------------------------------------------------------ | ------------- | ------- |
 | `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently. | `yarn`, `npm` | `npm`   |
-| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`     | `true`  |
+| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`     | `false` |
 
 ##### Example usage
 

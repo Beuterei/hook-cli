@@ -104,7 +104,7 @@ export = registerCommandModule()({
             alias: 'n',
             type: 'boolean',
             description: 'If true only prints warning messages and do not exit with not zero code',
-            default: true,
+            default: false,
         },
     },
     handler: async argv => {
