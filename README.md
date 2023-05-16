@@ -48,6 +48,14 @@ Run commands. For example using the hooks in `.husky`.
 
 ### Commands
 
+-   [checkCommitMessageIssueKey](#checkcommitmessageissuekey)
+-   [checkCommitMessagePattern](#checkcommitmessagepattern)
+-   [checkForFileChanged](#checkforfilechanged)
+-   [checkForVulnerabilities](#checkforvulnerabilities)
+-   [checkPackageVersion](#checkpackageversion)
+-   [checkPackageVersionInFile](#checkpackageversioninfile)
+-   [updateReminder](#updatereminder)
+
 #### checkCommitMessageIssueKey
 
 Check the pattern of a commit message
