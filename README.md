@@ -280,12 +280,6 @@ npm run hook-cli -- [command]
 npx ts-node src/index.ts [command]
 ```
 
-<!-- CONTRIBUTING -->
-
-## Contributing
-
-Follow [contributing](https://github.com/Good-Games-Munich/.github/wiki/workflows#contributing).
-
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
