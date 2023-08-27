@@ -1,8 +1,8 @@
-import path from 'path';
-import { color } from 'console-log-colors';
-import Listr from 'listr';
 import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute } from '../util/exec.helper';
+import { color } from 'console-log-colors';
+import Listr from 'listr';
+import path from 'path';
 
 export = registerCommandModule<{ filePath: string }>()({
     command: 'checkPackageVersionInFile [filePath]',

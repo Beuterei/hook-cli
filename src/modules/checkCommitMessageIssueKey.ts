@@ -1,6 +1,6 @@
-import Listr from 'listr';
 import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
+import Listr from 'listr';
 
 export = registerCommandModule<{ commitMsgPath: string }>()({
     command: 'checkCommitMessageIssueKey [commitMsgPath]',

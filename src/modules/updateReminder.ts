@@ -1,11 +1,11 @@
-import { color } from 'console-log-colors';
-import { Table } from 'console-table-printer';
-import Listr from 'listr';
 import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
 import { NPMOutputParser } from '../util/npm.helper';
 import type { YarnObject } from '../util/yarn.helper';
 import { YarnOutputParser } from '../util/yarn.helper';
+import { color } from 'console-log-colors';
+import { Table } from 'console-table-printer';
+import Listr from 'listr';
 
 interface OutdatedNpm {
     current: string;

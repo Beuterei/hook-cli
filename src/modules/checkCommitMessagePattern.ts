@@ -1,6 +1,6 @@
+import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import fs from 'fs';
 import Listr from 'listr';
-import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 
 const ignoreWildcards: RegExp[] = [
     // eslint-disable-next-line unicorn/no-unsafe-regex

@@ -1,9 +1,9 @@
-import { color } from 'console-log-colors';
-import Listr from 'listr';
 import { HookFailedError, registerCommandModule } from '../util/commandModule.helper';
 import { execute, ExecuteError } from '../util/exec.helper';
 import { NPMOutputParser } from '../util/npm.helper';
 import { YarnOutputParser } from '../util/yarn.helper';
+import { color } from 'console-log-colors';
+import Listr from 'listr';
 
 interface AuditResult {
     critical: number;
@@ -54,7 +54,8 @@ const auditCommandBuilder = (packageManager: string, production: boolean) => {
     return command;
 };
 
-const totalVulnerabilities = (object: AuditResult) => Object.values(object).reduce((a, b) => a + b);
+const totalVulnerabilities = (object: AuditResult) =>
+    Object.values(object).reduce((previousValue, currentValue) => previousValue + currentValue);
 
 export = registerCommandModule()({
     command: 'checkForVulnerabilities',

@@ -15,9 +15,9 @@
     <br />
     <br />
     ·
-    <a href="https://github.com/beuluis/hook-cli/issues">Report Bug</a>
+    <a href="https://github.com/Beuterei/hook-cli/issues">Report Bug</a>
     ·
-    <a href="https://github.com/beuluis/hook-cli/issues">Request Feature</a>
+    <a href="https://github.com/Beuterei/hook-cli/issues">Request Feature</a>
     ·
   </p>
 </p>
@@ -284,38 +284,17 @@ npx ts-node src/index.ts [command]
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<!-- TODO -->
-
-## TODOs:
-
--   [ ] Add command to check version between `package.json` and `package-lock.json`
--   [ ] Add command to check engine
--   [ ] Add command to check types
--   [ ] Add command to check peerDependencies
-
-<!-- CONTACT -->
-
-## Contact
-
-Luis Beu - me@luisbeu.de
+Follow [contributing](https://github.com/Good-Games-Munich/.github/wiki/workflows#contributing).
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/beuluis/hook-cli.svg?style=flat-square
-[contributors-url]: https://github.com/beuluis/hook-cli/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/beuluis/hook-cli.svg?style=flat-square
-[forks-url]: https://github.com/beuluis/hook-cli/network/members
-[stars-shield]: https://img.shields.io/github/stars/beuluis/hook-cli.svg?style=flat-square
-[stars-url]: https://github.com/beuluis/hook-cli/stargazers
-[issues-shield]: https://img.shields.io/github/issues/beuluis/hook-cli.svg?style=flat-square
-[issues-url]: https://github.com/beuluis/hook-cli/issues
-[license-shield]: https://img.shields.io/github/license/beuluis/hook-cli.svg?style=flat-square
+[contributors-shield]: https://img.shields.io/github/contributors/Beuterei/hook-cli.svg?style=flat-square
+[contributors-url]: https://github.com/Beuterei/hook-cli/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Beuterei/hook-cli.svg?style=flat-square
+[forks-url]: https://github.com/Beuterei/hook-cli/network/members
+[stars-shield]: https://img.shields.io/github/stars/Beuterei/hook-cli.svg?style=flat-square
+[stars-url]: https://github.com/Beuterei/hook-cli/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Beuterei/hook-cli.svg?style=flat-square
+[issues-url]: https://github.com/Beuterei/hook-cli/issues
+[license-shield]: https://img.shields.io/github/license/Beuterei/hook-cli.svg?style=flat-square
