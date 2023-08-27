@@ -43,7 +43,7 @@
     "@types/listr": "0.14.4",
     "@types/node": "18.7.18",
     "@types/yargs": "17.0.12",
-    "eslint": "8.23.1",
+    "eslint": "8.48.0",
     "husky": "8.0.1",
     "lint-staged": "13.0.3",
     "ts-node": "10.9.1",
