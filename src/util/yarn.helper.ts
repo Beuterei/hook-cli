@@ -12,7 +12,6 @@ const isYarnObject = (object: any): object is YarnObject =>
 /**
  * Parse a yarn --json command output (One object per line).
  * Throws error if it encounters invalid json or a error data type from yarn
- *
  * @example <caption>Execute command</caption>
  * const commandOut = await execute('yarn outdated --json');
  * const result = YarnOutputParser(commandOut.stdout, commandOut.stderr);
@@ -33,11 +32,12 @@ export const YarnOutputParser = (stdout: string, stderr: string): YarnObject[] =
     }
 
     const error = errorObject.find(
-        element => isYarnObject(element) && element.type === 'error',
+        (element) => isYarnObject(element) && element.type === 'error',
     ) as YarnObject;
+
     if (error) {
         throw new Error(typeof error.data === 'string' ? error.data : 'Unknown error');
     }
 
-    return outputObject.filter(element => isYarnObject(element)) as YarnObject[];
+    return outputObject.filter((element) => isYarnObject(element)) as YarnObject[];
 };

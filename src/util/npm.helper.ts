@@ -8,7 +8,6 @@ const isNPMError = (object: unknown): object is NPMErrorObject =>
 /**
  * Parse a npm --json command output.
  * Throws error if it encounters invalid json or a error message from npm
- *
  * @example <caption>Execute command</caption>
  * const result = NPMOutputParser(await execute('npm outdated --json').stdout);
  */

@@ -8,7 +8,7 @@ interface ExecuteResolve {
 
 export class ExecuteError extends Error {
     public constructor(
-        public readonly code: number | null,
+        public readonly code: null | number,
         public readonly stdout: string,
         public readonly stderr: string,
     ) {
@@ -18,7 +18,6 @@ export class ExecuteError extends Error {
 
 /**
  * Execute a command and collects the results
- *
  * @example <caption>Execute command</caption>
  * const result = await execute('echo HelloWorld');
  * console.log(result.stdout)
@@ -29,11 +28,11 @@ export const execute = async (command: string): Promise<ExecuteResolve> =>
         let stderr = '';
 
         const execution = exec(command);
-        execution.stdout?.on('data', data => (stdout += data));
-        execution.stderr?.on('data', data => (stderr += data));
-        execution.on('exit', code =>
+        execution.stdout?.on('data', (data) => (stdout += data));
+        execution.stderr?.on('data', (data) => (stderr += data));
+        execution.on('exit', (code) =>
             code === 0
-                ? resolve({ code, stdout, stderr })
+                ? resolve({ code, stderr, stdout })
                 : reject(new ExecuteError(code, stdout, stderr)),
         );
     });
