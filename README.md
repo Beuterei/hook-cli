@@ -6,7 +6,10 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <img src="https://yargs.js.org/images/yargs-logo.png" alt="Logo" height="60">
+
+  <p align="center">
+    <img src="assets/cli.gif" alt="hook-cli demo" width="600">
+  </p>
 
   <h3 align="center">hook-cli</h3>
 
@@ -48,23 +51,36 @@ Run commands. For example using the hooks in `.husky`.
 
 ### Commands
 
--   [checkCommitMessageIssueKey](#checkcommitmessageissuekey)
--   [checkCommitMessagePattern](#checkcommitmessagepattern)
--   [checkForFileChanged](#checkforfilechanged)
--   [checkForVulnerabilities](#checkforvulnerabilities)
--   [checkPackageVersion](#checkpackageversion)
--   [checkPackageVersionInFile](#checkpackageversioninfile)
--   [updateReminder](#updatereminder)
+- [About The Project](#about-the-project)
+    - [Disclaimer](#disclaimer)
+    - [Installation](#installation)
+    - [Usage](#usage)
+    - [Commands](#commands)
+        - [checkCommitMessageIssueKey](#checkcommitmessageissuekey)
+            - [Example usage](#example-usage)
+        - [checkCommitMessagePattern](#checkcommitmessagepattern)
+            - [Example usage](#example-usage-1)
+        - [checkForFileChanged](#checkforfilechanged)
+            - [Example usage](#example-usage-2)
+        - [checkForVulnerabilities](#checkforvulnerabilities)
+            - [Example usage](#example-usage-3)
+        - [checkPackageVersion](#checkpackageversion)
+            - [Example usage](#example-usage-4)
+        - [checkPackageVersionInFile](#checkpackageversioninfile)
+            - [Example usage](#example-usage-5)
+        - [updateReminder](#updatereminder)
+            - [Example usage](#example-usage-6)
+- [Useful](#useful)
 
 #### checkCommitMessageIssueKey
 
 Check the pattern of a commit message
 
-| Option            | Description                                                              | Type      | default |
-| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
-| `-p`, `--prefix`  | Prefix of the issue key.                                                 | `string`  | ``      |
-| `-m`, `--message` | Get message from command line instead of file.                           | `string`  | ``      |
-| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+| Option              | Description                                                              | Type      | default |
+| ------------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-p`, `--prefix`    | Prefix of the issue key.                                                 | `string`  | ``      |
+| `-m`, `--message`   | Get message from command line instead of file.                           | `string`  | ``      |
+| `-w`, `--warn-only` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
 
 ##### Example usage
 
@@ -81,18 +97,18 @@ npx hook-cli checkCommitMessageIssueKey -m "KEY-12 message" -p "KEY"
 ```
 
 ```bash
-npx hook-cli checkCommitMessageIssueKey -m "KEY-12 message" -p "KEY" -n
+npx hook-cli checkCommitMessageIssueKey -m "KEY-12 message" -p "KEY" -w
 ```
 
 #### checkCommitMessagePattern
 
 Check the pattern of a commit message
 
-| Option            | Description                                                              | Type      | default |
-| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
-| `-p`, `--pattern` | Regex pattern to check the message against.                              | `string`  | ``      |
-| `-m`, `--message` | Get message from command line instead of file.                           | `string`  | ``      |
-| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+| Option              | Description                                                              | Type      | default |
+| ------------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-p`, `--pattern`   | Regex pattern to check the message against.                              | `string`  | ``      |
+| `-m`, `--message`   | Get message from command line instead of file.                           | `string`  | ``      |
+| `-w`, `--warn-only` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
 
 ##### Example usage
 
@@ -109,17 +125,17 @@ npx hook-cli checkCommitMessagePattern -m "I say HelloWorld" -p "HelloWorld"
 ```
 
 ```bash
-npx hook-cli checkCommitMessagePattern -m "I say HelloWorld" -p "HelloWorld" -n
+npx hook-cli checkCommitMessagePattern -m "I say HelloWorld" -p "HelloWorld" -w
 ```
 
 #### checkForFileChanged
 
 Check if a staged file like a changelog was changed locale or remote compared to another branch
 
-| Option            | Description                                                              | Type      | default |
-| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
-| `-b`, `--branch`  | Branch to compare to.                                                    | `string`  | `main`  |
-| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `true`  |
+| Option              | Description                                                              | Type      | default |
+| ------------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-b`, `--branch`    | Branch to compare to.                                                    | `string`  | `main`  |
+| `-w`, `--warn-only` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
 
 ##### Example usage
 
@@ -132,11 +148,11 @@ npx hook-cli checkForFileChanged CHANGELOG.md -b trunk
 ```
 
 ```bash
-npx hook-cli checkForFileChanged CHANGELOG.md -n
+npx hook-cli checkForFileChanged CHANGELOG.md -w
 ```
 
 ```bash
-npx hook-cli checkForFileChanged CHANGELOG.md -b trunk -n
+npx hook-cli checkForFileChanged CHANGELOG.md -b trunk -w
 ```
 
 #### checkForVulnerabilities
@@ -148,7 +164,7 @@ Runs a package audit and collects the results.
 | `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently. | `yarn`, `npm`                                 | `npm`      |
 | `-l`, `--audit-level`     | The severity of the vulnerabilities what the script will report.                                 | `info`, `low`, `moderate`, `high`, `critical` | `critical` |
 | `-p`, `--prod`            | If true only run audit for prod dependencies and skip dev ones.                                  | `boolean`                                     | `false`    |
-| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`                                     | `false`    |
+| `-w`, `--warn-only`       | If true only prints warning messages and do not exit with not zero code.                         | `boolean`                                     | `false`    |
 
 ##### Example usage
 
@@ -165,24 +181,24 @@ npx hook-cli checkForVulnerabilities --audit-level low
 ```
 
 ```bash
-npx hook-cli checkForVulnerabilities --no-fail
+npx hook-cli checkForVulnerabilities --warn-only
 ```
 
 ```bash
-npx hook-clicheckForVulnerabilities --prod
+npx hook-cli checkForVulnerabilities --prod
 ```
 
 ```bash
-npx hook-cli checkForVulnerabilities -l high -m yarn -n -p
+npx hook-cli checkForVulnerabilities -l high -m yarn -w -p
 ```
 
 #### checkPackageVersion
 
 Check if the version field is the same for package.json and package-lock.json
 
-| Option            | Description                                                              | Type      | default |
-| ----------------- | ------------------------------------------------------------------------ | --------- | ------- |
-| `-n`, `--no-fail` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+| Option              | Description                                                              | Type      | default |
+| ------------------- | ------------------------------------------------------------------------ | --------- | ------- |
+| `-w`, `--warn-only` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
 
 ##### Example usage
 
@@ -197,7 +213,7 @@ Check if the version field is the same for package.json and file
 | Option              | Description                                                              | Type      | default |
 | ------------------- | ------------------------------------------------------------------------ | --------- | ------- |
 | `-p`, `--json-path` | Path in json file to check                                               | `string`  | ``      |
-| `-n`, `--no-fail`   | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
+| `-w`, `--warn-only` | If true only prints warning messages and do not exit with not zero code. | `boolean` | `false` |
 
 ##### Example usage
 
@@ -206,7 +222,7 @@ npx hook-cli checkPackageVersionInFile hello.json -p 'path.version'
 ```
 
 ```bash
-npx hook-cli checkPackageVersionInFile hello.json -p 'path.version' -n
+npx hook-cli checkPackageVersionInFile hello.json -p 'path.version' -w
 ```
 
 #### updateReminder
@@ -216,7 +232,7 @@ Prints a list of packages that have updates.
 | Option                    | Description                                                                                      | Type          | default |
 | ------------------------- | ------------------------------------------------------------------------------------------------ | ------------- | ------- |
 | `-m`, `--package-manager` | The package manager you want to use. Keep in mind that both package managers report differently. | `yarn`, `npm` | `npm`   |
-| `-n`, `--no-fail`         | If true only prints warning messages and do not exit with not zero code.                         | `boolean`     | `false` |
+| `-w`, `--warn-only`       | If true only prints warning messages and do not exit with not zero code.                         | `boolean`     | `false` |
 
 ##### Example usage
 
@@ -229,55 +245,31 @@ npx hook-cli updateReminder -m yarn
 ```
 
 ```bash
-npx hook-cli updateReminder -n
+npx hook-cli updateReminder -w
 ```
 
 ```bash
-npx hook-cli updateReminder -m yarn -n
+npx hook-cli updateReminder -m yarn -w
 ```
-
-<!-- REGISTER NEW COMMAND -->
-
-## Register new command
-
-1. Create new command module at `src/modules`.
-
-```bash
-touch src/modules/helloWorld.ts
-```
-
-2. Use the register helper to register a module and export it. See the Jsdoc for more usage information.
-
-```typescript
-import { registerCommandModule } from '../util/commandModule.helper';
-
-export = registerCommandModule()({
-    command: 'helloWorld',
-    describe: 'HelloWorld',
-    handler: () => console.log('HelloWorld'),
-});
-```
-
-<!-- USEFUL -->
 
 ## Useful
 
--   Print help page for command
+- Print help page for command
 
 ```bash
 npx hook-cli [command] --help
 ```
 
--   Test command during development (Exit codes get not correctly forwarded).
+- Test command during development (Exit codes get not correctly forwarded).
 
 ```bash
 npm run hook-cli -- [command]
 ```
 
--   Test command during development with correct exi code.
+- Test command during development with correct exi code.
 
 ```bash
-npx ts-node src/index.ts [command]
+npx tsx src/index.ts [command]
 ```
 
 <!-- MARKDOWN LINKS & IMAGES -->

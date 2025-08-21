@@ -1,0 +1,22 @@
+jobs:
+  publish-npm:
+    needs: testing
+    secrets: inherit
+    uses: Beuterei/reusable-workflows/.github/workflows/package-publish.yml@main
+    with:
+      dist_tag: "next"
+      node_version: "22"
+  testing:
+    permissions:
+      pull-requests: write
+    secrets: inherit
+
+    uses: Beuterei/reusable-workflows/.github/workflows/node-qa-tests.yml@main
+name: "Publish pack with next dist-tag with npm registry"
+
+on:
+  push:
+    branches:
+      - main
+  # eslint-disable-next-line yml/no-empty-mapping-value
+  workflow_dispatch:

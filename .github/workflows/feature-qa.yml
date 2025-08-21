@@ -1,0 +1,19 @@
+jobs:
+  testing:
+    permissions:
+      pull-requests: write
+    secrets: inherit
+    uses: Beuterei/reusable-workflows/.github/workflows/node-qa-tests.yml@main
+    with:
+      test_runner: vitest
+
+name: "Run quality assurance tests"
+
+on:
+  pull_request:
+    branches:
+      - main
+    types:
+      - opened # pr is created
+      - reopened # pr is reopened
+      - synchronize # pr got new commit

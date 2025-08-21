@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-npm test
-npx hook-cli checkForVulnerabilities
-npx hook-cli updateReminder
+npm run test:cov
+npx tsx src/index.ts checkForVulnerabilities
+npx tsx src/index.ts updateReminder --warn-only
