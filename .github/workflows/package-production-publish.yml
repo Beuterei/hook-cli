@@ -11,6 +11,8 @@ jobs:
     secrets: inherit
 
     uses: Beuterei/reusable-workflows/.github/workflows/node-qa-tests.yml@main
+    with:
+      test_runner: vitest
 name: "Publish pack with latest dist-tag with npm registry"
 
 on:
